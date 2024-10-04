@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<PRE>
+---- 정적 자원(고정된 파일)의 형태로 동적UI 를 제공하기 위해 [javascript]로직을 활용하고 있음.
+하드코딩된 텍스트 -수정(정적)
+<button id = "changebtn"> 다크테마로 변경</button>
+현재 시간(client side) : <span id = "timearea"></span>
+현재 시간(server side) : <span id = "serverarea"></span>
+<!-- 다른 것들에게 피해를 주지 않으려면 비동기 요청 -->
+</PRE>
+
+<!-- MIME 텍스트라고 부름  : 전송 컨텐츠의 종류 표현-->
+<!-- text/html, text/css 텍스트기반에 html, css  -->
+<!-- text/plain- 순수 문자열 -->
+<!-- text/javascript 자바 스크립트(동적- 그래서 변수 앞에 타입이 올 수가 없음요) 문자열 -->
+<!-- const 상수 변하지 않는 값  -->
+<script type="text/javascript">
+	const serverarea = document.getElementById("serverarea");
+	
+	fetch("/WebStudy001/now2.do") //어느 방향으로 보낼 것인지 url 
+	//이 것은 절대경로 //상대경로를 쓰면 바뀔 수가 있음 
+	//동일 출처인 경우에는 생략이 가능함 //오리진을 제외한 나머지 경로만 쓴거였음 
+		// .then((resp)=>resp.text()) //resolve 형태
+		.then((resp)=>resp.json()) //언마샤링 ? 
+		
+		//.then((html)=> serverarea.innerHTML = html) 
+		.then((jsonObj)=> serverarea.innerHTML = jsonObj.now) 
+		//프라미스 체인 함수 then이 2개
+		.catch(console.log); //리젝트 형태
+	
+	const timearea = document.getElementById("timearea");
+	setInterval(() => { 
+		//setimeout : 함수를 한번 호출
+		//setInterval : 일정 시간이 간격을 두고 함수를 실행하는 방법 
+		timearea.innerHTML = new Date();
+	}, 1000); //자바스크립트 언어를 통해 동적인 언어로 만들어버림 
+	//정적자원의 형태로 코드 자체를 서비스하고 있음 동적 UI가 제공 
+	
+	//서비스는 정적으로 동적인 URL을 사용함 소스는 안바뀌는데 시간은 계쏙 바뀜 
+	const btn = document.getElementById("changebtn");
+	btn.addEventListener("click",(event)=>{ //이벤트 핸들러
+		document.body.style.backgroundColor="black";
+		document.body.style.color="white";
+	});
+
+</script>
+</body>
+</html>
